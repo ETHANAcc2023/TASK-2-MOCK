@@ -53,5 +53,13 @@ def sign_up_page():
         return redirect("/")
     return render_template('sign_up_page.html', form=form, name=session.get('name'),known=session.get('known',False))
 
+@app.route('/sign_in', methods = ['GET','POST'])
+def sign_In_page():
+    return render_template('sign_in_page.html')
+
+@app.route('/profile', methods = ['GET','Post'])
+def Profile_page():
+    return render_template('Profile_page.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
