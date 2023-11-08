@@ -1,7 +1,7 @@
 from flask import Flask, session, render_template, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField
+from wtforms import StringField,SubmitField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo
 import os
 
@@ -26,6 +26,9 @@ class RegisterForm(FlaskForm):
     password = StringField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
     confirm_password = StringField("Confirm Password:",validators=[DataRequired()])
     submit = SubmitField("submit")
+
+class Answer(FlaskForm):
+    answer = StringField("Answer:")
 
 with app.app_context():
     db.create_all()
@@ -60,6 +63,5 @@ def sign_In_page():
 @app.route('/profile', methods = ['GET','Post'])
 def Profile_page():
     return render_template('Profile_page.html')
-
 if __name__ == '__main__':
     app.run(debug=True)
