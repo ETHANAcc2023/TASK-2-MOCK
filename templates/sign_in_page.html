@@ -11,16 +11,26 @@
     <div class="bg-white rounded-md  text-center mt-6 mx-2 p-4">
         <p class="text-lg font-bold pb-5"> Sign In</p>
         <form action="POST" class="grid mt-4 text-left">
-            <label for="UserName" class="ml-3 font-medium">UserName</label>
-            <input name="UserName" id="UserName" class="row-span-3 outline outline-neutral-300 p-1 rounded m-3">
-            <label for="Email" class="ml-3 font-medium">Email</label>
-            <input name="Email" id="Email" class=" row-span-3 outline outline-neutral-300 p-1 rounded m-3">
-            <label for="Password" class="ml-3 font-medium">Password</label>
-            <input name="Password" id="Password" class="row-span-3 outline outline-neutral-300 p-1 rounded m-3">
-            <input type="submit" class="outline outline-neutral-300 bg-blue-400 p-1 rounded m-3 hover:bg-blue-300">
+            {{ form.hidden_tag()}} <br>
+
+            {{ form.email.label(class="font-bold")}} <br>
+            {{ form.email(class = "row-span-3 outline outline-neutral-300 p-1 rounded m-3")}} <br>
+
+            {{ form.name.label(class="font-bold")}} <br>
+            {{ form.name(class = "row-span-3 outline outline-neutral-300 p-1 rounded m-3")}} <br>
+            {{ form.password.label(class="font-bold") }} <br>
+            {{ form.password(class="row-span-3 outline outline-neutral-300 p-1 rounded m-3") }} <br>
+
+            {{ form.confirm_password.label(class="font-bold") }} <br>
+            {{ form.confirm_password(class = "row-span-3 outline outline-neutral-300 p-1 rounded m-3") }} <br>
+
+            {{ form.submit(class="outline outline-neutral-300 bg-blue-400 p-1 rounded m-3 hover:bg-blue-300") }}
         </form>
+        
         <p>Dont have an account?</p>
-        <button class="bg-blue-300 rounded p-2 m-1 hover:bg-blue-200">Create One!</button>
+        <form action="https://google.com">
+            <button class="bg-blue-300 rounded p-2 m-1 hover:bg-blue-200">Create One!</button>
+        </form>
     </div>
 </body>
 </html>

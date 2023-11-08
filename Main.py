@@ -22,7 +22,7 @@ class Forms_users(db.Model):
 
 class RegisterForm(FlaskForm):
     email = StringField("enter Email:",validators=[DataRequired()])
-    name = StringField("enter username:",validators=[DataRequired()])
+    username = StringField("enter username:",validators=[DataRequired()])
     password = StringField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
     confirm_password = StringField("Confirm Password:",validators=[DataRequired()])
     submit = SubmitField("submit")
