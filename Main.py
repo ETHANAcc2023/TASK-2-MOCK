@@ -1,7 +1,7 @@
 from flask import Flask, session, render_template, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField, TextAreaField
+from wtforms import StringField,SubmitField, TextAreaField, PasswordField
 from wtforms.validators import DataRequired, EqualTo
 import os
 
@@ -11,7 +11,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = "eocfgdgdgdfifhje9oshf9wos£hfsokj££eh-8902ufbnu3h7wu9houfbj££ef33knb834££8sdhfhosfsfep"
-
 
 class Forms_users(db.Model):
     __tablename__= 'Forms_users'
@@ -23,8 +22,8 @@ class Forms_users(db.Model):
 class RegisterForm(FlaskForm):
     email = StringField("enter Email:",validators=[DataRequired()])
     username = StringField("enter username:",validators=[DataRequired()])
-    password = StringField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
-    confirm_password = StringField("Confirm Password:",validators=[DataRequired()])
+    password = PasswordField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
+    confirm_password = PasswordField("Confirm Password:",validators=[DataRequired()])
     submit = SubmitField("submit")
 
 class Answer(FlaskForm):
@@ -44,15 +43,15 @@ def sign_up_page():
         userEmail = Forms_users.query.filter_by(email=form.email.data).first()
         userName = Forms_users.query.filter_by(username=form.username.data).first()
         if userName is None and userEmail is None:
-            user = Forms_users(username=form.name.data, email = form.email.data, password=form.password.data)
+            user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
             db.session.add(user)
             db.session.commit()
             session['known']=False
         else:
             session['known']=True
             flash("You aready have an account!")
-        session['name'] = form.name.data
-        form.name.data = ''
+        session['name'] = form.username.data
+        form.username.data = ''
         return redirect("/")
     return render_template('sign_up_page.html', form=form, name=session.get('name'),known=session.get('known',False))
 
@@ -63,5 +62,6 @@ def sign_In_page():
 @app.route('/profile', methods = ['GET','Post'])
 def Profile_page():
     return render_template('Profile_page.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
