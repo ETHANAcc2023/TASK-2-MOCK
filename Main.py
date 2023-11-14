@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, flash, redirect
+from flask import Flask, session, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField, TextAreaField, PasswordField
@@ -24,6 +24,12 @@ class RegisterForm(FlaskForm):
     username = StringField("enter username:",validators=[DataRequired()])
     password = PasswordField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
     confirm_password = PasswordField("Confirm Password:",validators=[DataRequired(), EqualTo('confirm_password')])
+    submit = SubmitField("submit")
+
+class SignInForm(FlaskForm):
+    email = StringField("enter Email:",validators=[DataRequired()])
+    username = StringField("enter username:",validators=[DataRequired()])
+    password = PasswordField("enter password:",validators=[DataRequired()])
     submit = SubmitField("submit")
 
 class Answer(FlaskForm):
@@ -52,12 +58,24 @@ def sign_up_page():
             flash("You aready have an account!")
         session['name'] = form.username.data
         form.username.data = ''
-        return redirect("/")
+        return redirect((url_for("profile")))
     return render_template('sign_up_page.html', form=form, name=session.get('name'),known=session.get('known',False))
 
 @app.route('/sign_in', methods = ['GET','POST'])
 def sign_In_page():
-    return render_template('sign_in_page.html')
+    form = SignInForm()
+    if form.validate_on_submit():
+        user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
+        if user :
+            user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
+            session['known'] = False
+        else:
+            session['known'] = True
+            flash("You aready have an account!")
+        session['name'] = form.username.data
+        form.username.data = ''
+        return redirect(url_for("profile"))
+    return render_template('sign_in_page.html', form=form, name=session.get('name'),known=session.get('known',False))
 
 @app.route('/profile', methods = ['GET','Post'])
 def Profile_page():
