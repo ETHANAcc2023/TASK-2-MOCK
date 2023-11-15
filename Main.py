@@ -23,7 +23,7 @@ class RegisterForm(FlaskForm):
     email = StringField("enter Email:",validators=[DataRequired()])
     username = StringField("enter username:",validators=[DataRequired()])
     password = PasswordField("enter password:",validators=[DataRequired(), EqualTo('confirm_password')])
-    confirm_password = PasswordField("Confirm Password:",validators=[DataRequired()])
+    confirm_password = PasswordField("Confirm Password:",validators=[DataRequired(), EqualTo('confirm_password')])
     submit = SubmitField("submit")
 
 class Answer(FlaskForm):
@@ -46,9 +46,9 @@ def sign_up_page():
             user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
             db.session.add(user)
             db.session.commit()
-            session['known']=False
+            session['known'] = False
         else:
-            session['known']=True
+            session['known'] = True
             flash("You aready have an account!")
         session['name'] = form.username.data
         form.username.data = ''
