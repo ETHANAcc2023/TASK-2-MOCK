@@ -39,11 +39,29 @@ with app.app_context():
     db.create_all()
 
 @app.route('/')
+@app.route('/index')
 def homepage():
     return render_template('homepage.html')
 
 @app.route('/sign_up', methods = ['GET','POST'])
 def sign_up_page():
+    form = SignInForm()
+    if form.validate_on_submit():
+        userEmail = Forms_users.query.filter_by(email=form.email.data).first()
+        userName = Forms_users.query.filter_by(username=form.username.data).first()
+        if userName is None and userEmail is None:
+            user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
+            session['known'] = False
+        else:
+            session['known'] = True
+            flash("You aready have an account!")
+        session['name'] = form.username.data
+        form.username.data = ''
+        return url_for(redirect("/"))
+    return render_template('sign_up_page.html', form=form, name=session.get('name'),known=session.get('known',False))
+
+@app.route('/sign_in', methods = ['GET','POST'])
+def sign_In_page():
     form = RegisterForm()
     if form.validate_on_submit():
         userEmail = Forms_users.query.filter_by(email=form.email.data).first()
@@ -55,27 +73,15 @@ def sign_up_page():
             session['known'] = False
         else:
             session['known'] = True
-            flash("You aready have an account!")
+            return redirect(url_for(""))
         session['name'] = form.username.data
         form.username.data = ''
-        return redirect((url_for("profile")))
+        return redirect("/")
     return render_template('sign_up_page.html', form=form, name=session.get('name'),known=session.get('known',False))
 
 @app.route('/sign_in', methods = ['GET','POST'])
 def sign_In_page():
-    form = SignInForm()
-    if form.validate_on_submit():
-        user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
-        if user :
-            user = Forms_users(username=form.username.data, email = form.email.data, password=form.password.data)
-            session['known'] = False
-        else:
-            session['known'] = True
-            flash("You aready have an account!")
-        session['name'] = form.username.data
-        form.username.data = ''
-        return redirect(url_for("profile"))
-    return render_template('sign_in_page.html', form=form, name=session.get('name'),known=session.get('known',False))
+    return render_template('sign_in_page.html')
 
 @app.route('/profile', methods = ['GET','Post'])
 def Profile_page():
